@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Live Location Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    #map {
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"
+    defer
+  ></script>
+</head>
+
+<body>
+  <div id="map"></div>
+
+  <script>
+    let map;
+    let userMarker;
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 7.2549, lng: 80.5974 },
+        zoom: 18,
+      });
+
+      userMarker = new google.maps.Marker({
+        map: map,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 8,
+          fillColor: "#4285F4",
+          fillOpacity: 1,
+          strokeWeight: 2,
+          strokeColor: "white"
+        }
+      });
+
+      startLiveTracking();
+    }
+
+    function startLiveTracking() {
+      if (!navigator.geolocation) {
+        alert("Geolocation not supported");
+        return;
+      }
+
+      navigator.geolocation.watchPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+
+          console.log("GPS update:", lat, lng, "accuracy:", position.coords.accuracy);
+
+          const pos = { lat, lng };
+
+          userMarker.setPosition(pos);
+          map.setCenter(pos);
+        },
+        (error) => {
+          console.error("GPS error:", error);
+          alert("Location error: " + error.message);
+        },
+        {
+          enableHighAccuracy: true,
+          maximumAge: 0,
+          timeout: 20000
+        }
+      );
+    }
+  </script>
+</body>
+</html>

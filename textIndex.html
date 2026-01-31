@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="cont">
+        <div id="mainMap">mainMap</div>
+        <div id="t1">test1</div>
+    </div>
+
+    <script>
+        const mm = document.getElementById("mainMap");
+        const t1 = document.getElementById("t1");
+
+        mm.addEventListener("click", ()=> {
+            window.location.href = "mainMap.html";
+        });
+
+        t1.addEventListener("click", ()=> {
+            window.location.href = "test1.html";
+        });
+    </script>
+</body>
+</html>
