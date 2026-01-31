@@ -4,7 +4,57 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Welcome to Management Faculty</title>
-  <link rel="stylesheet" href="/style.css">
+  <style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  }
+  
+  html, body {
+    width: 100%;
+    height: 100%;
+    font-family: sans-serif;
+  }
+  
+  /* Full screen map */
+  #map-container {
+    width: 100%;
+    height: 100%;
+    background: #f2f2f2;
+  }
+  
+  #map {
+    height: 100%;
+    width: 100%;
+  }
+  
+  /* More button */
+  #more-btn {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    font-size: 22px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+  }
+  
+  /* AR button */
+  #ar-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 22px;
+    padding: 12px 18px;
+    font-size: 16px;
+  }
+  </style>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body>
@@ -21,7 +71,80 @@
   <button id="ar-btn">AR</button>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="/app.js"></script>
+  <script>
+    // Initialize map (Peradeniya area fallback)
+    const map = L.map("map").setView([7.2549, 80.5974], 17);
+
+    // Load map tiles
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap contributors",
+    }).addTo(map);
+
+    let userMarker = null;
+    let accuracyCircle = null;
+    let watchId = null;
+
+    if ("geolocation" in navigator) {
+      watchId = navigator.geolocation.watchPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          const accuracy = position.coords.accuracy; // meters
+
+          console.log("Accuracy:", accuracy);
+
+          // Ignore very bad readings (IP / weak signal)
+          if (accuracy > 100) return;
+
+          const userLatLng = [lat, lng];
+
+          if (!userMarker) {
+            userMarker = L.marker(userLatLng).addTo(map)
+              .bindPopup("You are here 📍")
+              .openPopup();
+
+            accuracyCircle = L.circle(userLatLng, {
+              radius: accuracy,
+            }).addTo(map);
+
+            map.setView(userLatLng, 18);
+          } else {
+            userMarker.setLatLng(userLatLng);
+            accuracyCircle.setLatLng(userLatLng);
+            accuracyCircle.setRadius(accuracy);
+          }
+        },
+        (error) => {
+          alert("Location error. Enable location and refresh.");
+          console.error(error);
+        },
+        {
+          enableHighAccuracy: true, // force GPS if possible
+          maximumAge: 0,
+          timeout: 20000,
+        }
+      );
+    } else {
+      alert("Geolocation is not supported on this device.");
+    }
+
+    // Buttons
+    document.getElementById("ar-btn").onclick = () => {
+      alert("AR button clicked");
+    };
+
+    document.getElementById("more-btn").onclick = () => {
+      alert("More menu clicked");
+    };
+
+    // Optional: stop watching when leaving page
+    window.addEventListener("beforeunload", () => {
+      if (watchId !== null) {
+        navigator.geolocation.clearWatch(watchId);
+      }
+    });
+  </script>
 </body>
 </html>
+
 
