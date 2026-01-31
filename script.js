@@ -72,6 +72,8 @@ function startLiveTracking() {
         (position) => {
             lat = position.coords.latitude;
             lng = position.coords.longitude;
+
+			const bounds = new google.maps.LatLngBounds();
             
             console.log("GPS update:", lat, lng, "accuracy:", position.coords.accuracy);
             
@@ -79,6 +81,9 @@ function startLiveTracking() {
             
             userMarker.setPosition(pos);
             map.setCenter(pos);
+
+			map.setCenter(bounds.getCenter());
+            map.setZoom(18);
         },
         (error) => {
           console.error("GPS error:", error);
@@ -204,4 +209,5 @@ function showPlaces(type) {
       map: map
     });
   });
+
 }
