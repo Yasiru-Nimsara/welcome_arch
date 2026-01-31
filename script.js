@@ -4,8 +4,8 @@ const mapDiv = document.getElementById("map");
 const u_dot = document.getElementById("u-dot-img");
 const more = document.getElementById("more");
 const more_cont = document.getElementById("more-cont");
-const lat = 7.2549;
-const lng = 80.5974;
+let lat = 7.2549;
+let lng = 80.5974;
 
 function initMap() {
   const FACULTY_BOUNDS = {
@@ -211,3 +211,4 @@ function showPlaces(type) {
   });
 
 }
+
