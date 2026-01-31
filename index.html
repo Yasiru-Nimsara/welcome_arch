@@ -2,86 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Welcome to Management Faculty</title>
+  <title>Welcome Arch AR – Live Location</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
   <style>
-    * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  }
-  
-  html, body {
-    width: 100%;
-    height: 100%;
-    font-family: sans-serif;
-  }
-  
-  /* Full screen map */
-  #map-container {
-    width: 100%;
-    height: 100%;
-    background: #f2f2f2;
-  }
-  
-  #map {
-    height: 100%;
-    width: 100%;
-  }
-  
-  /* More button */
-  #more-btn {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    font-size: 22px;
-    background: white;
-    border: none;
-    border-radius: 50%;
-    width: 44px;
-    height: 44px;
-  }
-  
-  /* AR button */
-  #ar-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: black;
-    color: white;
-    border: none;
-    border-radius: 22px;
-    padding: 12px 18px;
-    font-size: 16px;
-  }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+    #map {
+      height: 100vh;
+      width: 100%;
+    }
+    .controls {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 999;
+    }
+    .controls button {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: none;
+      background: #111;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
   </style>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body>
 
-  <!-- Full screen map area -->
-  <div id="map-container">
-    <div id="map"></div>
+  <div id="map"></div>
+
+  <div class="controls">
+    <button id="center-btn">Center me 📍</button>
+    <button id="ar-btn">AR</button>
+    <button id="more-btn">More</button>
   </div>
 
-  <!-- More button (top right) -->
-  <button id="more-btn">⋮</button>
-
-  <!-- AR button (bottom right) -->
-  <button id="ar-btn">AR</button>
-
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    // Initialize map (Peradeniya area fallback)
+    // Fallback start (Peradeniya)
     const map = L.map("map").setView([7.2549, 80.5974], 17);
 
-    // Load map tiles
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: "© OpenStreetMap contributors",
+      maxZoom: 19
     }).addTo(map);
 
     let userMarker = null;
     let accuracyCircle = null;
+    let lastLatLng = null;
     let watchId = null;
 
     if ("geolocation" in navigator) {
@@ -91,12 +72,13 @@
           const lng = position.coords.longitude;
           const accuracy = position.coords.accuracy; // meters
 
-          console.log("Accuracy:", accuracy);
+          console.log("Accuracy (m):", accuracy);
 
-          // Ignore very bad readings (IP / weak signal)
+          // Ignore very bad readings (IP-based / weak GPS)
           if (accuracy > 100) return;
 
           const userLatLng = [lat, lng];
+          lastLatLng = userLatLng;
 
           if (!userMarker) {
             userMarker = L.marker(userLatLng).addTo(map)
@@ -104,7 +86,7 @@
               .openPopup();
 
             accuracyCircle = L.circle(userLatLng, {
-              radius: accuracy,
+              radius: accuracy
             }).addTo(map);
 
             map.setView(userLatLng, 18);
@@ -115,13 +97,13 @@
           }
         },
         (error) => {
-          alert("Location error. Enable location and refresh.");
           console.error(error);
+          alert("Location error. Please enable location permission and refresh.");
         },
         {
-          enableHighAccuracy: true, // force GPS if possible
+          enableHighAccuracy: true, // force GPS
           maximumAge: 0,
-          timeout: 20000,
+          timeout: 20000
         }
       );
     } else {
@@ -129,22 +111,29 @@
     }
 
     // Buttons
+    document.getElementById("center-btn").onclick = () => {
+      if (lastLatLng) {
+        map.setView(lastLatLng, 18);
+      } else {
+        alert("Location not ready yet. Please wait a few seconds…");
+      }
+    };
+
     document.getElementById("ar-btn").onclick = () => {
-      alert("AR button clicked");
+      alert("AR button clicked (we’ll wire this to WebXR next 🔥)");
     };
 
     document.getElementById("more-btn").onclick = () => {
       alert("More menu clicked");
     };
 
-    // Optional: stop watching when leaving page
+    // Clean up
     window.addEventListener("beforeunload", () => {
       if (watchId !== null) {
         navigator.geolocation.clearWatch(watchId);
       }
     });
   </script>
+
 </body>
 </html>
-
-
