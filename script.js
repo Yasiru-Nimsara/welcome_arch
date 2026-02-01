@@ -515,9 +515,9 @@ function navigate_user_to_entrance() {
     };
   }
 
-  const entrance = {
-    lat: 7.255931607497495,
-    lng: 80.5991273150183
+  const thorana = {
+    lat: 7.256651710575668,
+    lng: 80.59560151112828
   };
 
   if (startPoint) {
@@ -541,7 +541,7 @@ function navigate_user_to_entrance() {
     const startPointInfo = new google.maps.InfoWindow({
       content: `
         <div style="font-weight:800;font-size:28px">
-          Navigate to <br> Faculty Entrance
+          Navigate to <br> Management Faculty
         </div>`
     });
 
@@ -551,12 +551,11 @@ function navigate_user_to_entrance() {
       map: map
     });
 
-    // Marker for entrance
+    // Marker for thorana
     const startPointEnd = new google.maps.Marker({
-      position: entrance,
+      position: thorana,
       map: map,
-      title: "Entrance here",
-      label: "Entrance Here",
+      title: "thorana here",
       icon: {
           path: google.maps.SymbolPath.CIRCLE,
           scale: 16,
@@ -570,12 +569,13 @@ function navigate_user_to_entrance() {
     // Fit both points
     const bounds = new google.maps.LatLngBounds();
     bounds.extend(startPoint);
-    bounds.extend(entrance);
+    bounds.extend(thorana);
     // map.fitBounds(bounds);
 
-    drawRoadRoute(startPoint, entrance);
+    drawRoadRoute(startPoint, thorana);
   }
 }
+
 
 
 
