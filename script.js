@@ -92,7 +92,7 @@ function show_sikka_points() {
       map: map,
       title: point.place,
       icon: {
-        url: "/Welcome_Arch/Assets/sikka2.png",
+        url: "/Assets/sikka2.png",
         scaledSize: new google.maps.Size(150, 150)
       }
     });
@@ -351,7 +351,7 @@ function showPlaces(type) {
       position: { lat: place.lat, lng: place.lng },
       map: map,
       icon: {
-        url: "/Welcome_Arch/Assets/red-dot.png",
+        url: "/Assets/red-dot.png",
         scaledSize: new google.maps.Size(200, 100)
       },
       title: place.name
@@ -457,3 +457,4 @@ document.getElementById("cur-loc").onclick = () => {
   let userPos = get_user_current_location();
   locateUser();
 };
+
