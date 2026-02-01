@@ -1,4 +1,6 @@
 let map;
+let directionsService;
+let directionsRenderer;
 let currentMarker = null;
 let panorama = null;
 let userMarker = null;
@@ -36,6 +38,17 @@ function initMap() {
     },
     mapTypeId: "terrain"
   });
+  
+  directionsService = new google.maps.DirectionsService();
+  directionsRenderer = new google.maps.DirectionsRenderer({
+    map: map,
+    suppressMarkers: false,
+    polylineOptions: {
+      strokeColor: "#1A73E8",
+      strokeWeight: 5,
+      strokeOpacity: 0.9
+    }
+  });
 
   // Initial marker at default location
   userMarker = new google.maps.Marker({
@@ -62,6 +75,24 @@ function initMap() {
   });
 
   show_sikka_points();
+  navigate_user_to_entrance();
+}
+
+function drawRoadRoute(start, end) {
+  const request = {
+    origin: start,
+    destination: end,
+    travelMode: google.maps.TravelMode.WALKING
+  };
+
+  directionsService.route(request, (result, status) => {
+    if (status === "OK") {
+      directionsRenderer.setDirections(result);
+    } else {
+      alert("Route failed: " + status);
+      console.error(status);
+    }
+  });
 }
 
 function show_sikka_points() {
@@ -460,12 +491,90 @@ async function locateUser() {
   }
 }
 
-
-
 document.getElementById("cur-loc").onclick = () => {
   let userPos = get_user_current_location();
   locateUser();
 };
 
+// navigate junior to entrance from QR scan place.
+function getQueryParam(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
+
+function navigate_user_to_entrance() {
+  const userLat = getQueryParam("lat");
+  const userLng = getQueryParam("lng");
+
+  let startPoint = null;
+
+  if (userLat && userLng) {
+    startPoint = {
+      lat: parseFloat(userLat),
+      lng: parseFloat(userLng)
+    };
+  }
+
+  const entrance = {
+    lat: 7.255931607497495,
+    lng: 80.5991273150183
+  };
+
+  if (startPoint) {
+    map.setCenter(startPoint);
+    map.setZoom(20);
+
+    // Marker for QR location
+    const startPointStart = new google.maps.Marker({
+      position: startPoint,
+      map: map,
+      title: "You are here",
+      icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 16,
+          fillColor: "#4285F4",
+          fillOpacity: 1,
+          strokeWeight: 2,
+          strokeColor: "white"
+        },
+    });
+    const startPointInfo = new google.maps.InfoWindow({
+      content: `
+        <div style="font-weight:800;font-size:28px">
+          Navigate to <br> Faculty Entrance
+        </div>`
+    });
+
+    // Open immediately on marker
+    startPointInfo.open({
+      anchor: startPointStart,
+      map: map
+    });
+
+    // Marker for entrance
+    const startPointEnd = new google.maps.Marker({
+      position: entrance,
+      map: map,
+      title: "Entrance here",
+      label: "Entrance Here",
+      icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 16,
+          fillColor: "#4285F4",
+          fillOpacity: 1,
+          strokeWeight: 2,
+          strokeColor: "white"
+        },
+    });
+
+    // Fit both points
+    const bounds = new google.maps.LatLngBounds();
+    bounds.extend(startPoint);
+    bounds.extend(entrance);
+    // map.fitBounds(bounds);
+
+    drawRoadRoute(startPoint, entrance);
+  }
+}
 
 
