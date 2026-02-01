@@ -431,7 +431,7 @@ async function locateUser() {
       title: "You are here",
       icon: {
           path: google.maps.SymbolPath.CIRCLE,
-          scale: 8,
+          scale: 16,
           fillColor: "#4285F4",
           fillOpacity: 1,
           strokeWeight: 2,
@@ -442,12 +442,21 @@ async function locateUser() {
 
     // Warning message
     const info = new google.maps.InfoWindow({
-      content: `<strong>Your current location</strong><br><small style="color:#666">⚠ Location may not be accurate</small>`});
+      content: `
+        <div style="font-weight:bold;">
+          Your current location<br>
+          <small style="color:#666;">⚠ Location may not be accurate</small>
+        </div>`
+    });
 
-      info.open(map, userMarker);
-
+    // Open immediately on marker
+    info.open({
+      anchor: userMarker,
+      map: map
+    });
+	  
   } catch (e) {
-    alert("Location access failed. Please Wait...");
+    console.log("Location access failed. Please Wait...");
   }
 }
 
@@ -457,5 +466,6 @@ document.getElementById("cur-loc").onclick = () => {
   let userPos = get_user_current_location();
   locateUser();
 };
+
 
 
