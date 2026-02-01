@@ -42,7 +42,7 @@ function initMap() {
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer({
     map: map,
-    suppressMarkers: false,
+    suppressMarkers: true,
     polylineOptions: {
       strokeColor: "#1A73E8",
       strokeWeight: 5,
@@ -576,5 +576,6 @@ function navigate_user_to_entrance() {
     drawRoadRoute(startPoint, entrance);
   }
 }
+
 
 
