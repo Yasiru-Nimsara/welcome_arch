@@ -444,10 +444,10 @@ async function locateUser() {
     const info = new google.maps.InfoWindow({
       content: `<strong>Your current location</strong><br><small style="color:#666">⚠ Location may not be accurate</small>`});
 
-      info.open(map, userLocationMarker);
+      info.open(map, userMarker);
 
   } catch (e) {
-    alert("Location access failed");
+    alert("Location access failed. Please Wait...");
   }
 }
 
