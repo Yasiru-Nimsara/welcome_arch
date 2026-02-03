@@ -277,7 +277,7 @@ function show_sikka_points() {
       map: map,
       title: point.place,
       icon: {
-        url: "/Welcome_Arch/Assets/sikka2.png",
+        url: "Assets/sikka2.png",
         scaledSize: new google.maps.Size(80, 80)
       },
       animation: google.maps.Animation.DROP
@@ -548,7 +548,7 @@ function showPlaces(type) {
       position: { lat: each_lat, lng: each_lng },
       map: map,
       icon: {
-        url: "/Welcome_Arch/Assets/red-dot.png",
+        url: "Assets/red-dot.png",
         scaledSize: new google.maps.Size(100, 50)
       },
       title: place_.name,
@@ -666,8 +666,7 @@ function show3Dmodel() {
   scene.add(ground);
 
   const loader = new THREE.GLTFLoader();
-  // loader.load("/Welcome_Arch/Assets/3Dmodel.glb", gltf => {
-  loader.load("/Welcome_Arch/Assets/3d_model.glb", gltf => {
+  loader.load("Assets/3Dmodel.glb", gltf => {
     model = gltf.scene;
     model.scale.set(0.5, 0.5, 0.5);
     model.position.set(0, 0.5, -0.7);
@@ -708,7 +707,7 @@ function openStreetView(place) {
     streetview_video.style.display = "none";
     streetview_video_title.textContent = place.name;
 
-    streetview_video.src = `/Welcome_Arch/Assets/StreetViews/${place.videoName}.mp4`;
+    streetview_video.src = `Assets/StreetViews/${place.videoName}.mp4`;
     streetview_video.loop = true;
     streetview_video.muted = true;
     streetview_video.autoplay = true;
@@ -983,4 +982,5 @@ function stopTracking() {
     navigator.geolocation.clearWatch(watchID);
     watchID = null;
   }
+
 }
