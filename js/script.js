@@ -519,7 +519,7 @@ const endPoints = {
     {name: "James_Peiris_Hostel", lat: 7.25024835433787, lng: 80.59760352414312, videoName: "jamespeirishostel"}
   ],
   nadan: [
-    {name: "sarasavi_Medura", lat: 7.2465419634199035, lng: 80.59618829293913, videoName: "ssarasaviMedura"}
+    {name: "sarasavi_Medura", lat: 7.2465419634199035, lng: 80.59618829293913, videoName: "ssarasaviMadura"}
   ]
 }
 
@@ -1203,3 +1203,4 @@ animation.addEventListener("click", () => {
     });
 
 });
+
