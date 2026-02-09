@@ -451,10 +451,10 @@ function show_sikka_points() {
 
 const endPoints = {
   wus: [
-    {name: "WUS", lat: 7.256025202180165, lng: 80.5960782932602, videoName: "can-wus"}
+    {name: "WUS", lat: 7.255968490117731, lng: 80.5960639730417 }
   ],
   thorana: [
-    {name: "Thorana", lat: 7.256651710575668, lng: 80.59560151112828, videoName: "thorana"}
+    {name: "Thorana", lat: 7.255968490117731, lng: 80.5960639730417}
   ],
   washrooms: [
     {name: "WUS", lat: 7.2562507250160015, lng: 80.5961705982571, videoName: "wr-wus"},
@@ -1128,6 +1128,29 @@ async function navigate_auto() {
 
   userMarker.setPosition(pos);
 
+  const desMarker = new google.maps.Marker({
+      map: map,
+      icon: {
+        url: "Assets/userMarker2.gif",
+        scaledSize: new google.maps.Size(80, 80)
+      },
+    });
+  }
+
+  desMarker.setPosition(destination);
+
+const desInfo = new google.maps.InfoWindow({
+    content: `
+      <div style="font-weight:800;font-size:16px">
+        Ask from you Senior Batchmate
+      </div>
+    `
+  });
+
+  desInfo.open({ anchor: desMarker, map });
+
+
+
   nav_btn.style.display = "none";
   loader_nav.style.display = "flex";
 
@@ -1202,3 +1225,4 @@ animation.addEventListener("click", () => {
     });
 
 });
+
